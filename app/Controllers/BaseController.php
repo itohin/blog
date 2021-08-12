@@ -15,9 +15,10 @@ class BaseController
         return $validator->validate($rules);
     }
 
-    public function view(string $path)
+    public function view(string $path, $data = [])
     {
-        return require base_path($path . '.php');
+        extract($data);
+        return require_once base_path($path . '.php');
     }
 
     public function redirect($path)

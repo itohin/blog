@@ -4,11 +4,21 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-class BlogController
+use App\Auth\Auth;
+
+class BlogController extends BaseController
 {
+    protected Auth $auth;
+
+    public function __construct(Auth $auth)
+    {
+        $this->auth = $auth;
+    }
+
     public function index()
     {
-        var_dump('Blog page');
+        $user = $this->auth->user();
+        return $this->view('/views/blog/index', compact('user'));
     }
 
     public function create()

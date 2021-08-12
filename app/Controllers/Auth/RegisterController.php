@@ -10,7 +10,7 @@ use App\Hashing\Hash;
 use App\Request\Request;
 use App\Session\Session;
 
-class LoginController extends BaseController
+class RegisterController extends BaseController
 {
     protected Request $request;
 
@@ -35,33 +35,37 @@ class LoginController extends BaseController
         }
         $errors = $this->session->get('errors', []);
         $old = $this->session->get('old', []);
-        $error = $this->session->get('error', null);
 
-
-        return $this->view('/views/auth/login', compact('errors', 'old', 'error'));
+        return $this->view('/views/auth/register', compact('errors', 'old'));
     }
 
-    public function login()
+    public function register()
     {
-        $this->session->clear('errors', 'old', 'error');
-        $validator = $this->validate($inputs = $this->request->getBody(), [
+        $inputs = $this->request->getBody();
+        $this->validateRegistration($inputs);
+        try {
+            $this->auth->createUser($inputs);
+            return $this->redirect('/');
+        } catch (\Exception $e) {
+            return $this->redirect('/register');
+        }
+    }
+
+    protected function validateRegistration(array $inputs)
+    {
+        $this->session->clear('errors', 'old');
+        $validator = $this->validate($inputs, [
+            'name' => ['required', ['min' => 3]],
             'email' => ['required', 'email'],
-            'password' => ['required', ['min' => 8]]
+            'password' => ['required', ['min' => 8]],
+            'confirmation' => ['required', ['match' => 'password']]
         ]);
         if ($validator->hasErrors()) {
             $this->session->set([
                 'errors' => $validator->getErrors(),
                 'old' => $inputs
             ]);
-            return $this->redirect('/login');
+            return $this->redirect('/register');
         }
-
-        $attempt = $this->auth->attempt($inputs['email'], $inputs['password']);
-
-        if (!$attempt) {
-            $this->session->set('error', 'Wrong credentials.');
-            return $this->redirect('/login');
-        }
-        return $this->redirect('/');
     }
 }

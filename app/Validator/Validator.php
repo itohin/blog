@@ -51,21 +51,28 @@ class Validator
 
     protected function validateMin(string $field, int $min)
     {
-        $field = $this->fields[$field];
-        if (is_numeric($field)) {
-            if ((int)$field < $min) {
+        $fieldValue = $this->fields[$field];
+        if (is_numeric($fieldValue)) {
+            if ((int)$fieldValue < $min) {
                 $this->errors[$field][] = 'Min value is ' . $min;
                 return;
             }
         }
-        if (is_array($field)) {
-            if (count($field) < $min) {
+        if (is_array($fieldValue)) {
+            if (count($fieldValue) < $min) {
                 $this->errors[$field][] = 'Min length is ' . $min;
                 return;
             }
         }
-        if (strlen($field) < $min) {
+        if (strlen($fieldValue) < $min) {
             $this->errors[$field][] = 'Min length is ' . $min;
+        }
+    }
+
+    protected function validateMatch(string $field, $sourceField)
+    {
+        if ($this->fields[$field] !== $this->fields[$sourceField]) {
+            $this->errors[$field][] = 'This field must be equal to ' . $sourceField;
         }
     }
 

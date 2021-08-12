@@ -17,15 +17,31 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
-                </li>
-                <li>
-                    <a class="nav-link" href="/register">Register</a>
-                </li>
+                <?php if (!isset($user) || !$user): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="/register">Register</a>
+                    </li>
+                <?php else: ?>
+                    <li>
+                        <a class="nav-link" href="#"><?= $user->name ?></a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log out</a>
+                    </li>
+                <?php endif ?>
             </ul>
+            <form id="logout-form" action="/logout" method="POST" style="display: none">
+            </form>
         </div>
     </nav>
 </div>
 
 <div class="container mt-5">
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= $error ?>
+        </div>
+    <?php endif ?>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Database\Connection;
+use App\Database\QueryBuilder;
 
 class DatabaseServiceProvider extends ServiceProvider implements ServiceProviderInterface
 {
@@ -12,7 +13,9 @@ class DatabaseServiceProvider extends ServiceProvider implements ServiceProvider
     {
         $container = $this->getContainer();
         $config = $container->get('config');
+        $connection = Connection::make($config['database']);
 
-        $container->bind('database', Connection::make($config['database']));
+        $container->bind('database', $connection);
+        $container->bind(QueryBuilder::class, new QueryBuilder($connection));
     }
 }

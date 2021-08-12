@@ -13,6 +13,15 @@ class QueryBuilder
         $this->pdo = $pdo;
     }
 
+    public function selectBy($table, $field, $value)
+    {
+        $statement = $this->pdo->prepare("select * from {$table} where {$field} = '{$value}'");
+
+        $statement->execute();
+
+        return $statement->fetch(\PDO::FETCH_OBJ);
+    }
+
     public function selectAll($table)
     {
         $statement = $this->pdo->prepare("select * from {$table}");
@@ -33,10 +42,10 @@ class QueryBuilder
 
         try {
             $statement = $this->pdo->prepare($sql);
-
             $statement->execute($parameters);
+            return $this->pdo->lastInsertId();
         } catch (\Exception $e) {
-            die($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 }

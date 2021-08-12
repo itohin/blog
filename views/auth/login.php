@@ -8,11 +8,17 @@
             <form action="/login" method="POST">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="text" class="form-control" name="email" id="email">
+                    <input type="text" class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>" name="email" id="email" value="<?= $old['email'] ?? '' ?>">
+                    <?php if (isset($errors['email'])): ?>
+                        <div class="invalid-feedback"><?= $errors['email'][0] ?></div>
+                    <?php endif ?>
                 </div>
                 <div class="form-group">
                     <label for="email">Pasword</label>
-                    <input type="password" class="form-control" name="password" id="password">
+                    <input type="password" class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>"" name="password" id="password">
+                    <?php if (isset($errors['password'])): ?>
+                        <div class="invalid-feedback"><?= $errors['password'][0] ?></div>
+                    <?php endif ?>
                 </div>
                 <div class="form-check">
                     <label for="remember" class="for-check-label">
