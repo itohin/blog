@@ -31,7 +31,7 @@
                     <li>
                         <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Log out</a>
                     </li>
-                <?php endif ?>
+                <?php endif; ?>
             </ul>
             <form id="logout-form" action="/logout" method="POST" style="display: none">
             </form>
@@ -44,4 +44,4 @@
         <div class="alert alert-danger" role="alert">
             <?= $error ?>
         </div>
-    <?php endif ?>
+    <?php endif; ?>

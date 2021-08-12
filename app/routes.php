@@ -13,3 +13,6 @@ $router->add('get', '/', 'BlogController@index');
 
 $router->add('get', '/blog-{date}', 'BlogController@show');
 $router->add('get', '/addblog', 'BlogController@create');
+$router->add('post', '/addblog', 'BlogController@store');
+$router->add('get', '/editblog-{date}', 'BlogController@edit');
+$router->add('post', '/editblog-{date}', 'BlogController@update');

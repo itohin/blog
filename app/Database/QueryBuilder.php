@@ -24,7 +24,7 @@ class QueryBuilder
 
     public function selectAll($table)
     {
-        $statement = $this->pdo->prepare("select * from {$table}");
+        $statement = $this->pdo->prepare("select * from {$table} order by id desc");
 
         $statement->execute();
 
@@ -44,6 +44,28 @@ class QueryBuilder
             $statement = $this->pdo->prepare($sql);
             $statement->execute($parameters);
             return $this->pdo->lastInsertId();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function updateBy($table, $field, $value, $parameters)
+    {
+        $params = array_map(function ($key) {
+            return "{$key} = :{$key}";
+        }, array_keys($parameters));
+        $params = implode(', ', $params);
+        $sql = sprintf(
+            "update %s set %s where %s = '%s'",
+            $table,
+            $params,
+            $field,
+            $value
+        );
+
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute($parameters);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

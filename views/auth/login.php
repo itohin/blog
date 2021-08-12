@@ -11,20 +11,14 @@
                     <input type="text" class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>" name="email" id="email" value="<?= $old['email'] ?? '' ?>">
                     <?php if (isset($errors['email'])): ?>
                         <div class="invalid-feedback"><?= $errors['email'][0] ?></div>
-                    <?php endif ?>
+                    <?php endif; ?>
                 </div>
                 <div class="form-group">
                     <label for="email">Pasword</label>
                     <input type="password" class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>"" name="password" id="password">
                     <?php if (isset($errors['password'])): ?>
                         <div class="invalid-feedback"><?= $errors['password'][0] ?></div>
-                    <?php endif ?>
-                </div>
-                <div class="form-check">
-                    <label for="remember" class="for-check-label">
-                        <input type="checkbox" name="remember" id="remember" class="form-check-input">
-                        Remember me
-                    </label>
+                    <?php endif; ?>
                 </div>
                 <div class="form-group mt-3">
                     <button class="btn btn-primary w-100">Log In</button>

@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Database\Connection;
 use App\Database\QueryBuilder;
+use App\Repositories\BlogRepository;
 
 class DatabaseServiceProvider extends ServiceProvider implements ServiceProviderInterface
 {
@@ -14,8 +15,10 @@ class DatabaseServiceProvider extends ServiceProvider implements ServiceProvider
         $container = $this->getContainer();
         $config = $container->get('config');
         $connection = Connection::make($config['database']);
+        $builder = new QueryBuilder($connection);
 
         $container->bind('database', $connection);
-        $container->bind(QueryBuilder::class, new QueryBuilder($connection));
+        $container->bind(QueryBuilder::class, $builder);
+        $container->bind(BlogRepository::class, new BlogRepository($builder));
     }
 }
