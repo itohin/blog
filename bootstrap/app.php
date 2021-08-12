@@ -5,10 +5,12 @@ declare(strict_types=1);
 session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/container.php';
+require_once base_path('/bootstrap/container.php');
+
+
 
 $router = $container->get('router');
-require_once __DIR__ . '/../app/routes.php';
+require_once base_path('/app/routes.php');
 
 try {
     $router->resolve();

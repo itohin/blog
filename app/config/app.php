@@ -9,5 +9,10 @@ return [
         'options' => [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]
+    ],
+
+    'providers' => [
+        \App\Providers\AppServiceProvider::class,
+        \App\Providers\DatabaseServiceProvider::class
     ]
 ];

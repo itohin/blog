@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-$container = new \App\Container\Container;
-$provider = new \App\Providers\AppServiceProvider($container);
+use App\Container\Container;
+use App\Providers\ConfigServiceProvider;
 
-$container->addProvider($provider);
+$container = new Container;
+(new ConfigServiceProvider($container))->register();
 
-foreach ($container->getProviders() as $provider) {
-    $provider->register();
+$config = $container->get('config');
+
+foreach ($config['providers'] as $provider) {
+    (new $provider($container))->register();
 }
