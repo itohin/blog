@@ -28,7 +28,12 @@ class Validator
                 }
             }
         }
-        return count($this->errors) === 0;
+        return $this;
+    }
+
+    public function hasErrors(): bool
+    {
+        return count($this->errors) > 0;
     }
 
     protected function validateRule(string $field, string $restriction, $param = null)

@@ -9,19 +9,19 @@ use App\Validator\Validator;
 
 class BaseController
 {
-    public function validate(Request $request, array $rules)
+    public function validate(array $inputs, array $rules) :Validator
     {
-        $validator = new Validator($request->getBody());
-        $isValid = $validator->validate($rules);
-        if (!$isValid) {
-            var_dump($validator->getErrors());
-            die();
-        }
-        var_dump('true');
+        $validator = new Validator($inputs);
+        return $validator->validate($rules);
     }
 
     public function view(string $path)
     {
         return require base_path($path . '.php');
+    }
+
+    public function redirect($path)
+    {
+        header('Location: ' . $path);
     }
 }
