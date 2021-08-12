@@ -10,5 +10,3 @@ $container->addProvider($provider);
 foreach ($container->getProviders() as $provider) {
     $provider->register();
 }
-
-var_dump($container->get('test'));
