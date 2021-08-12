@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider implements ServiceProviderInter
         $container = $this->getContainer();
         $request = new Request();
 
-        $container->bind('request', $request);
-        $container->bind('router', new Router(new RouteResolver($request)));
+        $container->bind(Request::class, $request);
+        $container->bind(Router::class, new Router(new RouteResolver($request, $container)));
     }
 }
