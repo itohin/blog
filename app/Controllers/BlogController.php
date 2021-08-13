@@ -88,7 +88,7 @@ class BlogController extends BaseController
         }
 
         $this->repository->update($date, $inputs);
-        return $this->redirect('/editblog-' . $date);
+        return $this->redirect('/blog-' . $date);
     }
 
     protected function validatePost($inputs)

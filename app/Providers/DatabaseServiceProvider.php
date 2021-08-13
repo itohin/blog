@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Database\Connection;
 use App\Database\QueryBuilder;
 use App\Repositories\BlogRepository;
+use App\Repositories\UsersRepository;
 
 class DatabaseServiceProvider extends ServiceProvider implements ServiceProviderInterface
 {
@@ -20,5 +21,6 @@ class DatabaseServiceProvider extends ServiceProvider implements ServiceProvider
         $container->bind('database', $connection);
         $container->bind(QueryBuilder::class, $builder);
         $container->bind(BlogRepository::class, new BlogRepository($builder));
+        $container->bind(UsersRepository::class, new UsersRepository($builder));
     }
 }

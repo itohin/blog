@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Auth;
 
-use App\Database\QueryBuilder;
 use App\Hashing\Hash;
+use App\Repositories\UsersRepository;
 use App\Session\Session;
 
 class Auth
 {
-    private QueryBuilder $queryBuilder;
+    private UsersRepository $repository;
 
     private Hash $hasher;
 
     private Session $session;
 
-    public function __construct(QueryBuilder $queryBuilder, Hash $hasher, Session $session)
+    public function __construct(UsersRepository $repository, Hash $hasher, Session $session)
     {
-        $this->queryBuilder = $queryBuilder;
+        $this->repository = $repository;
         $this->hasher = $hasher;
         $this->session = $session;
     }
@@ -30,7 +30,7 @@ class Auth
             'email' => $inputs['email'],
             'password' => $this->hasher->create($inputs['password'])
         ];
-        $userId = $this->queryBuilder->insert('users', $inputs);
+        $userId = $this->repository->create($inputs);
         $this->session->set('id', $userId);
     }
 
@@ -39,7 +39,7 @@ class Auth
         if (!$this->session->exists('id')) {
             return null;
         }
-        return $this->queryBuilder->selectBy('users', 'id', $this->session->get('id'));
+        return $this->repository->findBy('id', $this->session->get('id'));
     }
 
     public function logout()
@@ -47,9 +47,9 @@ class Auth
         $this->session->clear('id');
     }
 
-    public function attempt($username, $password): bool
+    public function attempt($email, $password): bool
     {
-        $user = $this->getByUsername($username);
+        $user = $this->getByEmail($email);
         if (!$user || !$this->hasValidCredentials($user, $password)) {
             return false;
         }
@@ -63,8 +63,8 @@ class Auth
         return $this->hasher->check($password, $user->password);
     }
 
-    protected function getByUsername($username)
+    protected function getByEmail($email)
     {
-        return $this->queryBuilder->selectBy('users', 'email', $username);
+        return $this->repository->findBy('email', $email);
     }
 }
