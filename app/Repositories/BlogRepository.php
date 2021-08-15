@@ -29,7 +29,7 @@ class BlogRepository
 
     public function create(&$inputs)
     {
-        $inputs['date'] = date('Y-m-d');
+        $inputs['date'] = date('Y-m-d H:i:s');
         $this->queryBuilder->insert($this->table, $inputs);
     }
 

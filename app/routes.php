@@ -11,8 +11,8 @@ $routes->post('register', '/register', 'Auth\\RegisterController@register');
 
 $routes->get('home', '/', 'BlogController@index');
 
-$routes->get('blog.index', '/blog-{date}', 'BlogController@show', ['date' => '\d{4}-\d{2}-\d{2}']);
+$routes->get('blog.index', '/blog-{date}', 'BlogController@show', ['date' => '\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2}']);
 $routes->get('blog.create', '/addblog', 'BlogController@create');
 $routes->post('blog.store', '/addblog', 'BlogController@store');
-$routes->get('blog.edit', '/editblog-{date}', 'BlogController@edit', ['date' => '\d{4}-\d{2}-\d{2}']);
-$routes->post('blog.update', '/editblog-{date}', 'BlogController@update', ['date' => '\d{4}-\d{2}-\d{2}']);
+$routes->get('blog.edit', '/editblog-{date}', 'BlogController@edit', ['date' => '\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2}']);
+$routes->post('blog.update', '/editblog-{date}', 'BlogController@update', ['date' => '\d{4}-\d{2}-\d{2}\s{1}\d{2}:\d{2}:\d{2}']);
