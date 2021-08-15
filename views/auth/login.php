@@ -6,6 +6,7 @@
         <div class="col-6">
             <h1 class="text-center">Log In</h1>
             <form action="/login" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $csrfToken?>">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="text" class="form-control <?= isset($errors['email']) ? 'is-invalid' : '' ?>" name="email" id="email" value="<?= $old['email'] ?? '' ?>">

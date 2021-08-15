@@ -5,6 +5,7 @@ require base_path('/views/partials/header.php');
         <div class="col-6">
             <h1 class="text-center">Register</h1>
             <form action="/register" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $csrfToken?>">
                 <div class="form-group">
                     <label for="email">Name</label>
                     <input type="text" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" name="name" id="name" value="<?= $old['name'] ?? '' ?>">

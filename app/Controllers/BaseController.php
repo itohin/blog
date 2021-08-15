@@ -28,7 +28,10 @@ class BaseController
         $errors = $this->session->get('errors', []);
         $error = $this->session->get('error', null);
         $old = $this->session->get('old', []);
+        $csrfToken = $this->session->get('csrf_token');
+
         $this->session->clear('error', 'errors', 'old');
+
         return require_once base_path($path . '.php');
     }
 

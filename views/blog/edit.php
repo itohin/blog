@@ -4,8 +4,9 @@
 
     <div class="row justify-content-center">
         <div class="col-6">
-            <h1 class="text-center">Edit <?= $post->title ?></h1>
+            <h1 class="text-center"><?= $post->title ?></h1>
             <form action="/editblog-<?= $post->date ?>" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $csrfToken?>">
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control <?= isset($errors['title']) ? 'is-invalid' : '' ?>" name="title" id="title" value="<?= $old['title'] ?? $post->title ?>">

@@ -11,6 +11,12 @@ class SessionServiceProvider extends ServiceProvider implements ServiceProviderI
     public function register()
     {
         $container = $this->getContainer();
-        $container->bind(Session::class, new Session());
+        $session = new Session();
+
+        if (!$session->exists('csrf_token')) {
+            $token = bin2hex(random_bytes(32));
+            $session->set('csrf_token', $token);
+        }
+        $container->bind(Session::class, $session);
     }
 }

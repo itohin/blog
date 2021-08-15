@@ -34,6 +34,7 @@
                 <?php endif; ?>
             </ul>
             <form id="logout-form" action="/logout" method="POST" style="display: none">
+                <input type="hidden" name="csrf_token" value="<?= $csrfToken?>">
             </form>
         </div>
     </nav>

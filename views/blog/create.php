@@ -6,6 +6,7 @@ require base_path('/views/partials/header.php');
         <div class="col-6">
             <h1 class="text-center">Create new post</h1>
             <form action="/addblog" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= $csrfToken?>">
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control <?= isset($errors['title']) ? 'is-invalid' : '' ?>" name="title" id="title" value="<?= $old['title'] ?? '' ?>">

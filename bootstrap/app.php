@@ -2,25 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Request\Request;
-use App\Router\Router;
-use App\Router\RouteResolver;
+use App\Container\Container;
+use App\Providers\ConfigServiceProvider;
 
-session_start();
+$container = new Container;
+(new ConfigServiceProvider($container))->register();
 
-require_once __DIR__ . '/../vendor/autoload.php';
-require_once base_path('/bootstrap/container.php');
+$config = $container->get('config');
 
-$router = $container->get(Router::class);
-$request = $container->get(Request::class);
-$routeResolver = $container->get(RouteResolver::class);
-
-$matchedRoute = $router->match($request);
-
-try {
-    $routeResolver->resolve($matchedRoute);
-} catch (Exception $e) {
-    http_response_code(404);
-    echo 'Page not found';
-    die();
+foreach ($config['providers'] as $provider) {
+    (new $provider($container))->register();
 }

@@ -27,14 +27,22 @@ class BlogRepository
         return $this->queryBuilder->selectBy($this->table, 'date', $date);
     }
 
-    public function create(&$inputs)
+    public function create($inputs)
     {
-        $inputs['date'] = date('Y-m-d H:i:s');
+        $inputs = [
+            'title' => $inputs['title'],
+            'content' => $inputs['content'],
+            'date' => date('Y-m-d H:i:s')
+        ];
         $this->queryBuilder->insert($this->table, $inputs);
     }
 
     public function update($date, $inputs)
     {
+        $inputs = [
+            'title' => $inputs['title'],
+            'content' => $inputs['content']
+        ];
         $this->queryBuilder->updateBy($this->table, 'date', $date, $inputs);
     }
 }
