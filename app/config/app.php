@@ -13,6 +13,7 @@ return [
 
     'providers' => [
         \App\Providers\AppServiceProvider::class,
+        \App\Providers\RouteServiceProvider::class,
         \App\Providers\DatabaseServiceProvider::class,
         \App\Providers\SessionServiceProvider::class,
         \App\Providers\HasherServiceProvider::class,

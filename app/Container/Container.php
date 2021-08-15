@@ -17,12 +17,17 @@ class Container
         return $this;
     }
 
+    public function has($key): bool
+    {
+        return isset($this->dependencies[$key]);
+    }
+
     /**
      * @throws Exception
      */
     public function get($key)
     {
-        if (!isset($this->dependencies[$key])) {
+        if (!$this->has($key)) {
             throw new Exception("Key {$key} doesn't exist in the container.");
         }
 

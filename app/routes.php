@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-$router->add('get', '/login', 'Auth\\LoginController@index');
-$router->add('post', '/login', 'Auth\\LoginController@login');
-$router->add('post', '/logout', 'Auth\\LogoutController@logout');
+$routes->get('login.index', '/login', 'Auth\\LoginController@index');
+$routes->post('login.store', '/login', 'Auth\\LoginController@login');
+$routes->post('logout', '/logout', 'Auth\\LogoutController@logout');
 
-$router->add('get', '/register', 'Auth\\RegisterController@index');
-$router->add('post', '/register', 'Auth\\RegisterController@register');
+$routes->get('register.index', '/register', 'Auth\\RegisterController@index');
+$routes->post('register', '/register', 'Auth\\RegisterController@register');
 
-$router->add('get', '/', 'BlogController@index');
+$routes->get('home', '/', 'BlogController@index');
 
-$router->add('get', '/blog-{date}', 'BlogController@show');
-$router->add('get', '/addblog', 'BlogController@create');
-$router->add('post', '/addblog', 'BlogController@store');
-$router->add('get', '/editblog-{date}', 'BlogController@edit');
-$router->add('post', '/editblog-{date}', 'BlogController@update');
+$routes->get('blog.index', '/blog-{date}', 'BlogController@show', ['date' => '\d{4}-\d{2}-\d{2}']);
+$routes->get('blog.create', '/addblog', 'BlogController@create');
+$routes->post('blog.store', '/addblog', 'BlogController@store');
+$routes->get('blog.edit', '/editblog-{date}', 'BlogController@edit', ['date' => '\d{4}-\d{2}-\d{2}']);
+$routes->post('blog.update', '/editblog-{date}', 'BlogController@update', ['date' => '\d{4}-\d{2}-\d{2}']);

@@ -4,50 +4,43 @@ declare(strict_types=1);
 
 namespace App\Router;
 
+use App\Request\Request;
+use Exception;
+
 class Router
 {
-    private array $methods;
+    private RouteCollection $routes;
 
-    private RouteResolver $resolver;
-
-    private array $handlers;
-
-    public function __construct(RouteResolver $resolver)
+    public function __construct(RouteCollection $routes)
     {
-        $this->resolver = $resolver;
-        $this->handlers = [];
-        $this->methods = [
-            'GET',
-            'POST',
-            'PUT',
-            'PATCH',
-            'DELETE'
-        ];
+        $this->routes = $routes;
     }
 
-    public function add(string $method, string $name, string $args): void
+    /**
+     * @throws Exception
+     */
+    public function match(Request $request): Result
     {
-        if (!in_array(strtoupper($method), $this->methods)) {
-            throw new \Exception('Unsupported method.');
+        foreach ($this->routes->getRoutes() as $route) {
+            if ($result = $route->match($request)) {
+                return $result;
+            }
         }
 
-        [$controller, $action] = explode('@', $args);
-        $name = preg_split("/-/", $name, 2);
-
-        $this->handlers[$method][$name[0]] = [
-            'controller' => $controller,
-            'action' => $action,
-            'param' => isset($name[1])
-        ];
+        throw new Exception('Request not matched');
     }
 
-    public function resolve()
+    /**
+     * @throws Exception
+     */
+    public function generate($name, array $params = []): string
     {
-        return $this->resolver->resolve($this->handlers);
-    }
+        foreach ($this->routes->getRoutes() as $route) {
+            if (null !== $url = $route->generate($name, array_filter($params))) {
+                return $url;
+            }
+        }
 
-    public function getHandlers(): array
-    {
-        return $this->handlers;
+        throw new Exception('Route not found');
     }
 }

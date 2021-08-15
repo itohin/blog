@@ -4,80 +4,55 @@ declare(strict_types=1);
 
 namespace App\Router;
 
-use App\Container\Container;
-use App\Request\Request;
 use Exception;
 use ReflectionClass;
+use App\Container\Container;
 
 class RouteResolver
 {
-    private Request $request;
     private Container $container;
 
-    public function __construct(Request $request, Container $container)
+    public function __construct(Container $container)
     {
-        $this->request = $request;
         $this->container = $container;
     }
 
-    public function resolve(array $handlers)
+    /**
+     * @throws Exception
+     */
+    public function resolve(Result $result)
     {
-        $method = strtolower($this->request->getMethod());
-        $uri = $this->request->getUri();
-        $uri = preg_split("/-/", $uri, 2);
-        $name = $uri[0];
-
-        if (!isset($handlers[$method])) {
-            throw new Exception('Method not allowed.');
+        $controller = $this->makeController($result->getController());
+        if (is_null($controller)) {
+            throw new Exception('Controller not defined.');
         }
-        if (!isset($handlers[$method][$name])) {
-            throw new Exception('Route not defined.');
-        }
-        $handlers = $handlers[$method][$name];
+        $action = $result->getAction();
+        $params = array_values($result->getAttributes());
 
-        $controller = $this->getController($handlers);
-        $action = $this->getAction($handlers, get_class($controller));
-        $param = $this->getParam($uri, $handlers);
-
-        return !is_null($param) ?
-            $controller->$action($param) :
-            $controller->$action();
+        return $controller->$action(...$params);
     }
 
-    protected function getParam(array $uri, array $handlers)
+
+    /**
+     * @return mixed|null
+     * @throws Exception
+     */
+    protected function makeController(string $controllerName)
     {
-        if (!$handlers['param']) {
+        if ($this->container->has($controllerName)) {
+            return $this->container->get($controllerName);
+        }
+        if (!class_exists($controllerName)) {
             return null;
         }
-        if (!isset($uri[1]) || empty($uri[1])) {
-            throw new Exception('Param required.');
-        }
-        return $uri[1];
-    }
 
-    protected function getController(array $handlers)
-    {
-        $controller = "App\\Controllers\\" . $handlers['controller'];
-        if (!class_exists($controller)) {
-            throw new Exception('Class not defined.');
-        }
-
-        $reflection = new ReflectionClass($controller);
+        $reflection = new ReflectionClass($controllerName);
         $constructor = $reflection->getConstructor();
         if (is_null($constructor)) {
-            return new $controller;
+            return new $controllerName;
         }
         $dependencies = $this->getDependencies($constructor);
-        return new $controller(...$dependencies);
-    }
-
-    protected function getAction(array $handlers, string $controller): string
-    {
-        $action = $handlers['action'];
-        if (!method_exists($controller, $action)) {
-            throw new Exception('Action not defined.');
-        }
-        return $action;
+        return new $controllerName(...$dependencies);
     }
 
     protected function getDependencies($constructor): array
@@ -85,9 +60,9 @@ class RouteResolver
         $dependencies = [];
         $params = $constructor->getParameters();
         foreach ($params as $param) {
-            $dependancyName = $param->getClass()->name;
-            $dependancy = $this->container->get($dependancyName);
-            $dependencies[] = $dependancy;
+            $dependencyName = $param->getClass()->name;
+            $dependency = $this->container->get($dependencyName);
+            $dependencies[] = $dependency;
         }
         return $dependencies;
     }
