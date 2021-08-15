@@ -22,6 +22,7 @@ class RegisterController extends BaseController
 
     public function __construct(Request $request, Session $session, Hash $hasher, Auth $auth)
     {
+        parent::__construct($session);
         $this->request = $request;
         $this->session = $session;
         $this->hasher = $hasher;
@@ -33,10 +34,8 @@ class RegisterController extends BaseController
         if ($this->auth->user()) {
             return $this->redirect('/');
         }
-        $errors = $this->session->get('errors', []);
-        $old = $this->session->get('old', []);
 
-        return $this->view('/views/auth/register', compact('errors', 'old'));
+        return $this->view('/views/auth/register');
     }
 
     public function register()
@@ -53,7 +52,6 @@ class RegisterController extends BaseController
 
     protected function validateRegistration(array $inputs)
     {
-        $this->session->clear('errors', 'old');
         $validator = $this->validate($inputs, [
             'name' => ['required', ['min' => 3]],
             'email' => ['required', 'email'],

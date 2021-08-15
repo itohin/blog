@@ -22,6 +22,7 @@ class LoginController extends BaseController
 
     public function __construct(Request $request, Session $session, Hash $hasher, Auth $auth)
     {
+        parent::__construct($session);
         $this->request = $request;
         $this->session = $session;
         $this->hasher = $hasher;
@@ -33,17 +34,12 @@ class LoginController extends BaseController
         if ($this->auth->user()) {
             return $this->redirect('/');
         }
-        $errors = $this->session->get('errors', []);
-        $old = $this->session->get('old', []);
-        $error = $this->session->get('error', null);
 
-
-        return $this->view('/views/auth/login', compact('errors', 'old', 'error'));
+        return $this->view('/views/auth/login');
     }
 
     public function login()
     {
-        $this->session->clear('errors', 'old', 'error');
         $validator = $this->validate($inputs = $this->request->getBody(), [
             'email' => ['required', 'email'],
             'password' => ['required', ['min' => 8]]

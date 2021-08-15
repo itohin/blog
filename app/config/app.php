@@ -12,10 +12,10 @@ return [
     ],
 
     'providers' => [
+        \App\Providers\SessionServiceProvider::class,
         \App\Providers\AppServiceProvider::class,
         \App\Providers\RouteServiceProvider::class,
         \App\Providers\DatabaseServiceProvider::class,
-        \App\Providers\SessionServiceProvider::class,
         \App\Providers\HasherServiceProvider::class,
         \App\Providers\AuthServiceProvider::class
     ]

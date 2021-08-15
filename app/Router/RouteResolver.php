@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Router;
 
+use App\Session\Session;
 use Exception;
 use ReflectionClass;
 use App\Container\Container;

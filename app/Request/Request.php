@@ -12,17 +12,24 @@ class Request
 
     private array $params;
 
+    private array $query;
+
     public function __construct()
     {
         $this->uri = $this->parseUri();
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $params = $this->method === 'GET' ? $_GET : $_POST;
-        $this->params = array_filter($params);
+        $this->params = array_filter($_POST);
+        $this->query = array_filter($_GET);
     }
 
-    public function getBody()
+    public function getBody(): array
     {
         return $this->params;
+    }
+
+    public function getQuery(): array
+    {
+        return $this->query;
     }
 
     public function __get($name)

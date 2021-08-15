@@ -21,6 +21,7 @@ class BlogController extends BaseController
 
     public function __construct(Request $request, Session $session, Auth $auth, BlogRepository $repository)
     {
+        parent::__construct($session);
         $this->request = $request;
         $this->session = $session;
         $this->auth = $auth;
@@ -49,9 +50,7 @@ class BlogController extends BaseController
         if (!$user) {
             return $this->redirect('/');
         }
-        $errors = $this->session->get('errors', []);
-        $old = $this->session->get('old', []);
-        return $this->view('/views/blog/create', compact('user', 'errors', 'old'));
+        return $this->view('/views/blog/create', compact('user'));
     }
 
     public function store()
@@ -73,10 +72,8 @@ class BlogController extends BaseController
             return $this->redirect('/');
         }
         $post = $this->repository->find($date);
-        $errors = $this->session->get('errors', []);
-        $old = $this->session->get('old', []);
 
-        return $this->view('/views/blog/edit', compact('user', 'post', 'errors', 'old'));
+        return $this->view('/views/blog/edit', compact('user', 'post'));
     }
 
     public function update(string $date)
@@ -96,7 +93,6 @@ class BlogController extends BaseController
         if (!$this->auth->user()) {
             return $this->redirect('/');
         }
-        $this->session->clear('errors', 'old');
         $validator = $this->validate($inputs, [
             'title' => ['required', ['min' => 5]],
             'content' => ['required', ['min' => 5]]
