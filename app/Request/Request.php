@@ -18,8 +18,8 @@ class Request
     {
         $this->uri = $this->parseUri();
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->params = array_filter($_POST);
-        $this->query = array_filter($_GET);
+        $this->params = array_filter(filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING) ?? []);
+        $this->query = array_filter(filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING) ?? []);
     }
 
     public function getBody(): array
